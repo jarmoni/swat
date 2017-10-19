@@ -34,7 +34,12 @@ function sendName() {
 }
 
 function showGreeting(message) {
-    $("#greetings").append("<tr><td> " + message + "</td></tr>");
+    $("#greetings").append(message);
+    scrollToBottom()
+}
+
+function scrollToBottom() {
+	  $('#greetings').scrollTop($('#greetings')[0].scrollHeight);
 }
 
 $(function () {
