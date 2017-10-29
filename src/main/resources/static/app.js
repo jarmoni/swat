@@ -34,6 +34,7 @@ function sendName() {
 }
 
 function showGreeting(message) {
+	console.log("greetings=" + $("#greetings").val() + ", message=" + message)
     $("#greetings").append(message);
     //scrollToBottom()
 }
