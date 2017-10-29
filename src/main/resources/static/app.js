@@ -35,7 +35,7 @@ function sendName() {
 
 function showGreeting(message) {
     $("#greetings").append(message);
-    scrollToBottom()
+    //scrollToBottom()
 }
 
 function scrollToBottom() {
