@@ -1,4 +1,4 @@
-package com.devglan.config;
+package org.jarmoni.websock_terminal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

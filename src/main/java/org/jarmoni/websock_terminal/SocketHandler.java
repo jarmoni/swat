@@ -1,4 +1,4 @@
-package com.devglan.config;
+package org.jarmoni.websock_terminal;
 
 import java.io.IOException;
 import java.util.Map;
@@ -25,16 +25,11 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
-		System.out.println("MSG=" + message);
+		
 		Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
 		String command = value.get("command");
-		LOG.debug("Command={}", command);
+		LOG.debug("From Terminal-input={}", command);
 		handlers.get(session).write(command);
-//		System.out.println("value=" + message);
-//		/*for(WebSocketSession webSocketSession : sessions) {
-//			webSocketSession.sendMessage(new TextMessage("Hello " + value.get("name") + " !"));
-//		}*/
-//			session.sendMessage(new TextMessage("Hello " + value.get("name") + " !"));
 	}
 	
 	@Override
@@ -47,6 +42,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 
+		this.handlers.get(session).stop();
 		this.handlers.remove(session);
 		LOG.info("Removed SshHandler for session={}", session != null ? session.getId() : null);
 	}
