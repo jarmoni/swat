@@ -35,16 +35,16 @@ public class SshHandler {
 	
 	private OutputStreamHandler osHandler;
 
-	public SshHandler(WebSocketSession wsSession) throws Exception {
+	public SshHandler(WebSocketSession wsSession, String host, int port, String userName, String passwd) throws Exception {
 
 		this.jsch = new JSch();
 		this.wsSession = wsSession;
 
-		Session session = jsch.getSession("johndoe", "localhost", 22);
+		Session session = jsch.getSession(userName, host, port);
 		session.setConfig("StrictHostKeyChecking", "no");
 		session.setConfig("PreferredAuthentications", "password");
 		session.setConfig("PubkeyAuthentication", "no");
-		session.setUserInfo(new SshUserInfo());
+		session.setUserInfo(new SshUserInfo(passwd));
 		session.connect();
 
 		Channel channel = session.openChannel("shell");
@@ -167,6 +167,13 @@ public class SshHandler {
 	}
 
 	public class SshUserInfo implements UserInfo, UIKeyboardInteractive {
+		
+		private String passwd;
+		
+		public SshUserInfo(String passwd) {
+			
+			this.passwd = passwd;
+		}
 
 		@Override
 		public String[] promptKeyboardInteractive(String destination, String name, String instruction, String[] prompt,
@@ -181,7 +188,7 @@ public class SshHandler {
 
 		@Override
 		public String getPassword() {
-			return "XXX";
+			return this.passwd;
 		}
 
 		@Override

@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -18,6 +19,19 @@ import com.google.gson.Gson;
 public class SocketHandler extends TextWebSocketHandler {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SocketHandler.class);
+	
+	// This is just for test ;-)
+	@Value("${ssh.user}")
+	private String sshUser;
+	
+	@Value("${ssh.passwd}")
+	private String sshPasswd;
+	
+	@Value("${ssh.host:localhost}")
+	private String sshHost;
+	
+	@Value("${ssh.port:22}")
+	private int sshPort;
 	
 	private Map<WebSocketSession, SshHandler> handlers = new ConcurrentHashMap<>();
 
@@ -35,7 +49,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-		this.handlers.put(session, new SshHandler(session));
+		this.handlers.put(session, new SshHandler(session, this.sshHost, this.sshPort, this.sshUser, this.sshPasswd));
 		LOG.info("Added new SshHandler for session={}", session != null ? session.getId() : null);
 	}
 	
