@@ -13,13 +13,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/name").permitAll().anyRequest().authenticated().and()
-		.formLogin().and()
-		.httpBasic();
-		
-		http.logout()
-        .invalidateHttpSession( true )
-        .deleteCookies("JSESSIONID");
+//		http.authorizeRequests().antMatchers("/name").permitAll().anyRequest().authenticated().and()
+//		.formLogin().and()
+//		.httpBasic();
+//		
+//		http.logout()
+//        .invalidateHttpSession( true )
+//        .deleteCookies("JSESSIONID");
 	}
 	
 	@Override
