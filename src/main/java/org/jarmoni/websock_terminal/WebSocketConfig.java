@@ -24,7 +24,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	private int sshPort;
 
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		System.out.println("######################### constructor called!!!!!!" + this.sshUser);
+		
 		registry.addHandler(new SocketHandler(this.sshHost, this.sshPort, this.sshUser, this.sshPasswd), "/ws");
 	}
 
