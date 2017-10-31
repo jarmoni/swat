@@ -54,7 +54,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 					@Override
 					public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
 							WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-						// TODO Auto-generated method stub
+
 						HttpServletRequest origRequest = ((ServletServerHttpRequest) request).getServletRequest();
 						
 						String user = origRequest.getParameter("webUser");
