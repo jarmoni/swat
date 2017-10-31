@@ -1,15 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>JQuery Terminal Emulator</title>
-		<script src="/jquery-3.2.1.js"></script>
-		<script src="/jquery.terminal-1.9.0.js"></script>
-		<script src="/terminal.js"></script>
-		<link rel="stylesheet" type="text/css" href="/jquery.terminal-1.9.0.css" />
-		<link rel="stylesheet" type="text/css" href="/terminal.css" />
-	</head>
-	<body>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>JQuery Terminal Emulator</title>
+<script src="/jquery-3.2.1.js"></script>
+<script src="/jquery.terminal-1.9.0.js"></script>
+<script src="/terminal.js"></script>
+<link rel="stylesheet" type="text/css" href="/jquery.terminal-1.9.0.css" />
+<link rel="stylesheet" type="text/css" href="/terminal.css" />
+</head>
+<body>
+	<div id="main-content" class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<form class="form-inline">
+					<div class="form-group">
+						<label for="connect">WebSocket connection:</label> -
+						<button id="connect" class="btn btn-default" type="submit">Connect</button>
+						<button id="disconnect" class="btn btn-default" type="submit" disabled="">Disconnect</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row">
 		<div id="terminal"></div>
-	</body>
+		</div>
+	</div>
+</body>
 </html>
