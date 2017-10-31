@@ -7,26 +7,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	// This does NOT work! ("Spring security does'nt support websockets without STOMP")
+	// (https://github.com/spring-projects/spring-security/issues/3915)
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests().antMatchers("/name").permitAll().anyRequest().authenticated().and()
-//		.formLogin().and()
-//		.httpBasic();
-//		
-//		http.logout()
-//        .invalidateHttpSession( true )
-//        .deleteCookies("JSESSIONID");
+		http.csrf().disable().authorizeRequests().antMatchers("/ws").permitAll().anyRequest().authenticated().and()
+				.httpBasic();
 	}
-	
+
+	// Global access to resources (authentication happens before websocket-handshake - see: WebSocketConfig)
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-	    web
-	        .ignoring()
-	        .antMatchers("/");
+		web.ignoring().antMatchers("/").anyRequest();
 	}
 
 	@Autowired

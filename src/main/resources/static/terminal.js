@@ -1,6 +1,12 @@
 $(document).ready(function() {
 	var host = 'localhost:8080';
-	var wsUrl = 'ws://' + host + '/ws';
+	//var wsUrl = 'ws://' + host + '/ws';
+	//var wsUrl = 'ws://user:password@' + host + '/ws';
+	var connParams = jQuery.param({
+		webUser: 'user',
+		webPasswd: 'password'
+	});
+	var wsUrl = 'ws://' + host + '/ws?' + connParams;
 	var connectUrl = 'http://' + host + '/connect';
 	var disconnectUrl = 'http://' + host + '/disconnect';
 	
@@ -69,17 +75,19 @@ $(document).ready(function() {
 	
 	$('#conn-form').submit(function( event ) {
 		console.log("Connecting...");
-		var reqBody = {};
-		reqBody['user'] = $('#user').val();
-		reqBody['passwd'] = $('#passwd').val();
-		reqBody['server'] = $('#server').val();
-		reqBody['port'] = $('#port').val();
-		console.log(JSON.stringify(reqBody));
-		//var $inputs = $('#conn-form :input');
-		doHttpPost(connectUrl, reqBody, function(response) {
-			connect();
-			console.log("Connected...");
-		});
+//		var reqBody = {};
+//		reqBody['user'] = $('#user').val();
+//		reqBody['passwd'] = $('#passwd').val();
+//		reqBody['server'] = $('#server').val();
+//		reqBody['port'] = $('#port').val();
+//		console.log(JSON.stringify(reqBody));
+//		//var $inputs = $('#conn-form :input');
+//		doHttpPost(connectUrl, reqBody, function(response) {
+//			connect();
+//			console.log("Connected...");
+//		});
+		connect();
+		console.log("Connected...");
 		event.preventDefault();
 	});
 
