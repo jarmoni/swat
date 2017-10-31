@@ -157,6 +157,7 @@ public class SshHandler {
 						LOG.error("Exception during polling", t);
 					}
 				}
+				LOG.info("InputStreamHandler is exiting");
 			}
 			catch(Throwable t) {
 				LOG.error("Exception in InputStreamHandler. Going down...", t);

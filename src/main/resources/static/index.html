@@ -13,19 +13,19 @@
 	<div id="body">
 	<div id="conn-bar">
 		<div class="col-md-6">
-			<form class="form-inline">
+			<form id="conn-form" class="form-inline">
 				<div class="form-group">
 					<label style="font-weight: bold;">SSH-Connection: </label>
 					<label for="url">Server:</label>
-					<input type="text" id="srv" name="srv" value="localhost">
+					<input type="text" id="server" name="server" value="localhost">
 					<label for="url">Port:</label>
 					<input type="text" id="port" name="port" value="22">
 					<label for="user">User:</label>
 					<input type="text" id="user" name="user">
 					<label for="passwd">Password:</label>
 					<input type="password" id="passwd" name="passwd">
-					<input type="submit" id="connect" value="Connect">
-					<input type="submit" id="disconnect" value="Disconnect">
+					<input type="submit" name="connect" value="Connect">
+					<input type="button" id="disconnect" name="disconnect" value="Disconnect">
 				</div>
 			</form>
 		</div>
