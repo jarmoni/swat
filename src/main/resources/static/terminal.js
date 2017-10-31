@@ -7,19 +7,19 @@ $(document).ready(function() {
 		webPasswd: 'password'
 	});
 	var wsUrl = 'ws://' + host + '/ws?' + connParams;
-	var connectUrl = 'http://' + host + '/connect';
-	var disconnectUrl = 'http://' + host + '/disconnect';
+//	var connectUrl = 'http://' + host + '/connect';
+//	var disconnectUrl = 'http://' + host + '/disconnect';
 	
 	var connected = false;
 	var ws;
 	
 
-	function sendToWs(command) {
-		var data = JSON.stringify({
-			'command' : command
-		})
+	function sendToWs(data) {
 		if(connected) {
 			ws.send(data);
+		}
+		else {
+			alert('No websocket-connection present')
 		}
 	}
 	
@@ -37,7 +37,10 @@ $(document).ready(function() {
 	}
 
 	var terminal = $('#terminal').terminal(function(command, terminal) {
-		sendToWs(command);
+		sendToWs(JSON.stringify({
+			'type': 'command',
+			'command': command
+		}));
 	}, {
 		greetings : 'Welcome to websocket-terminal',
 		prompt : '$ ',
@@ -46,15 +49,27 @@ $(document).ready(function() {
 	window.terminal = terminal;
 	
 	function connect() {
+		console.log("Connecting to URL=" + wsUrl);
 		ws = new WebSocket(wsUrl);
 		
 		ws.onopen = function() {
 			console.log('Socket open');
 			terminal.freeze(false);
 			terminal.enable();
+			connected = true;
+			var connMsg = JSON.stringify({
+				'type': 'sshCredentials',
+				'server': $('#server').val(),
+				'port': $('#port').val(),
+				'user': $('#user').val(),
+				'passwd': $('#passwd').val()
+			});
+			console.log("Sending connMsg to Ws=" + connMsg);
+			sendToWs(connMsg);
 		};
 		ws.onclose = function() {
 			console.log('Socket closed');
+			connected = false;
 			terminal.echo("\n\nWebsocket-connection closed.");
 			terminal.disable();
 			terminal.freeze(true);
@@ -63,7 +78,6 @@ $(document).ready(function() {
 			console.log("msg=" + msg);
 			terminal.echo(msg.data);
 		};
-		connected = true;
 	}
 	
 	$('#disconnect').click(function() {
@@ -75,6 +89,7 @@ $(document).ready(function() {
 	
 	$('#conn-form').submit(function( event ) {
 		console.log("Connecting...");
+		event.preventDefault();
 //		var reqBody = {};
 //		reqBody['user'] = $('#user').val();
 //		reqBody['passwd'] = $('#passwd').val();
@@ -87,8 +102,6 @@ $(document).ready(function() {
 //			console.log("Connected...");
 //		});
 		connect();
-		console.log("Connected...");
-		event.preventDefault();
 	});
 
 	
