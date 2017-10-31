@@ -20,8 +20,6 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.jcraft.jsch.UIKeyboardInteractive;
-import com.jcraft.jsch.UserInfo;
 
 public class SshHandler {
 
@@ -44,7 +42,8 @@ public class SshHandler {
 		session.setConfig("StrictHostKeyChecking", "no");
 		session.setConfig("PreferredAuthentications", "password");
 		session.setConfig("PubkeyAuthentication", "no");
-		session.setUserInfo(new SshUserInfo(passwd));
+		// We don't need the SSH-User-Info-stuff for our use-case
+		session.setPassword(passwd);
 		session.connect();
 
 		Channel channel = session.openChannel("shell");
@@ -59,22 +58,13 @@ public class SshHandler {
 		channel.connect();
 	}
 
-	public void write(String s) {
-
-		try {
-			this.isHandler.write(s);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public void stop() {
 		
 		this.isHandler.stopped = true;
 		this.osHandler.stopped = true;
 	}
 
+	// Sends terminal-output of SSH via Websocket to UI
 	public class OutputStreamHandler implements Runnable {
 
 		private Channel channel;
@@ -112,6 +102,13 @@ public class SshHandler {
 		}
 	}
 
+	
+	// Receives user-input via websocket and writes to SSH's InputStream
+	public void write(String s) {
+
+		this.isHandler.sendToSsh(s);
+	}
+
 	public class InputStreamHandler implements Runnable {
 
 		private final Channel channel;
@@ -119,16 +116,20 @@ public class SshHandler {
 
 		private BlockingQueue<String> mq;
 
-		public InputStreamHandler(Channel channel) throws Exception {
+		public InputStreamHandler(Channel channel) {
 
 			this.channel = channel;
 			this.mq = new LinkedBlockingQueue<>();
 		}
 
-		public void write(String s) throws Exception {
+		public void sendToSsh(String s) {
 
-			this.mq.put(s);
-			LOG.debug("Wrote line to queue={}", s);
+			try {
+				this.mq.put(s);
+				LOG.debug("Enqueued line={}", s);
+			} catch (InterruptedException e) {
+				LOG.error("Thread interrupted while enqeueing", e);
+			}
 		}
 
 		@Override
@@ -143,12 +144,9 @@ public class SshHandler {
 					try {
 						String line = this.mq.poll();
 						if(line != null) {
-							LOG.debug("Dequeued line={}", line);
 							writer.write(line + "\n");
 							writer.flush();
 							LOG.debug("Wrote line to OS. Line={}", line);
-							LOG.info("channel-closed=" + channel.isClosed());
-							LOG.info("channel-connected=" + channel.isConnected());
 						}
 						else {
 							Thread.sleep(20L);
@@ -166,50 +164,9 @@ public class SshHandler {
 		}
 	}
 
-	public class SshUserInfo implements UserInfo, UIKeyboardInteractive {
-		
-		private String passwd;
-		
-		public SshUserInfo(String passwd) {
-			
-			this.passwd = passwd;
-		}
 
-		@Override
-		public String[] promptKeyboardInteractive(String destination, String name, String instruction, String[] prompt,
-				boolean[] echo) {
-			return null;
-		}
-
-		@Override
-		public String getPassphrase() {
-			return null;
-		}
-
-		@Override
-		public String getPassword() {
-			return this.passwd;
-		}
-
-		@Override
-		public boolean promptPassword(String message) {
-			return true;
-		}
-
-		@Override
-		public boolean promptPassphrase(String message) {
-			return true;
-		}
-
-		@Override
-		public boolean promptYesNo(String message) {
-			return false;
-		}
-
-		@Override
-		public void showMessage(String message) {}
-	}
-	
+	// We have no 'real' terminal, so output of SSH contains some 'ugly' characters, which will be filtered here.
+	// Is a bit of a hack at the moment...
 	public static class LineParser {
 		
 		public static Optional<String> parseLine(String line) {
