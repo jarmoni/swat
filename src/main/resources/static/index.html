@@ -10,21 +10,27 @@
 <link rel="stylesheet" type="text/css" href="/terminal.css" />
 </head>
 <body>
-	<div id="main-content" class="container">
-		<div class="row">
-			<div class="col-md-6">
-				<form class="form-inline">
-					<div class="form-group">
-						<label for="connect">WebSocket connection:</label> -
-						<button id="connect" class="btn btn-default" type="submit">Connect</button>
-						<button id="disconnect" class="btn btn-default" type="submit" disabled="">Disconnect</button>
-					</div>
-				</form>
-			</div>
+	<div id="body">
+	<div id="conn-bar">
+		<div class="col-md-6">
+			<form class="form-inline">
+				<div class="form-group">
+					<label style="font-weight: bold;">SSH-Connection: </label>
+					<label for="url">Server:</label>
+					<input type="text" id="srv" name="srv" value="localhost">
+					<label for="url">Port:</label>
+					<input type="text" id="port" name="port" value="22">
+					<label for="user">User:</label>
+					<input type="text" id="user" name="user">
+					<label for="passwd">Password:</label>
+					<input type="password" id="passwd" name="passwd">
+					<input type="submit" id="connect" value="Connect">
+					<input type="submit" id="disconnect" value="Disconnect">
+				</div>
+			</form>
 		</div>
-		<div class="row">
-		<div id="terminal"></div>
-		</div>
+	</div>
+	<div id="terminal"></div>
 	</div>
 </body>
 </html>
