@@ -1,9 +1,10 @@
-package org.jarmoni.websock_terminal;
+package org.jarmoni.ws_ssh_terminal.ws;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jarmoni.ws_ssh_terminal.ssh.SshHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -18,18 +19,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SocketHandler.class);
 	
-	private String host, user, passwd;
-	private int port;
-	
 	private Map<WebSocketSession, SshHandler> handlers = new ConcurrentHashMap<>();
 	
-	public SocketHandler(String host, int port, String user, String passwd) {
-		this.host = host;
-		this.port = port;
-		this.user = user;
-		this.passwd = passwd;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -51,9 +42,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-		LOG.debug("Host={}, port={}, user={}, passwd={}", this.host, this.port, this.user, this.passwd);
-//		this.handlers.put(session, new SshHandler(session, this.host, this.port, this.user, this.passwd));
-//		LOG.info("Added new SshHandler for session={}", session != null ? session.getId() : null);
+		LOG.debug("Connection established for session-id={}", session != null ? session.getId() : null);
 	}
 	
 	@Override
