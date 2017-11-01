@@ -24,10 +24,16 @@ public class WsSecurityHandshakeInterceptor implements HandshakeInterceptor {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(WsSecurityHandshakeInterceptor.class);
 	
-	@Autowired
+	//@Autowired
 	private AuthenticationManager authenticationManager;
 	
 	private JwtValidator jwtValidator;
+	
+	public WsSecurityHandshakeInterceptor(AuthenticationManager authenticationManager, JwtValidator jwtValidator) {
+		
+		this.authenticationManager = authenticationManager;
+		this.jwtValidator = jwtValidator;
+	}
 
 	@Override
 	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,

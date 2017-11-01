@@ -9,16 +9,24 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 
+@Service
 public class WebUserDetailsService implements UserDetailsService {
-	
-	Map<String, WebUser> users = Collections.singletonMap("user", new WebUser("user", "pass"));
+
+	private Map<String, WebUser> users = Collections.singletonMap("user", new WebUser("user", "pass"));
+
+	public WebUserDetailsService(final BCryptPasswordEncoder bCryptPasswordEncoder) {
+
+		this.users = Collections.singletonMap("user", new WebUser("user", bCryptPasswordEncoder.encode("pass")));
+	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
-		WebUser webUser = this.users.get(username);
+	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+
+		final WebUser webUser = this.users.get(username);
 		if (webUser == null) {
 			throw new UsernameNotFoundException(username);
 		}
