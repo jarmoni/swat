@@ -13,14 +13,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+// This is just a dummy. Should be replaced with a 'real' implementation.
+// Should be moved to 'test'-package (is used in unit-tests as well)
 @Service
 public class WebUserDetailsService implements UserDetailsService {
 
-	private Map<String, WebUser> users = Collections.singletonMap("user", new WebUser("user", "pass"));
+	public static final String DUMMY_USER = "user";
+	public static final String DUMMY_PASSWD = "passwd";
+
+	private final Map<String, WebUser> users;
 
 	public WebUserDetailsService(final BCryptPasswordEncoder bCryptPasswordEncoder) {
 
-		this.users = Collections.singletonMap("user", new WebUser("user", bCryptPasswordEncoder.encode("pass")));
+		this.users = Collections.singletonMap("user", new WebUser(DUMMY_USER, bCryptPasswordEncoder.encode(DUMMY_PASSWD)));
 	}
 
 	@Override

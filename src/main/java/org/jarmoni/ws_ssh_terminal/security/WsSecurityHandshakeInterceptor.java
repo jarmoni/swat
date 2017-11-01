@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -19,46 +18,48 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+// Spring-security does not support websockets without STOMP (https://github.com/spring-projects/spring-security/issues/3915)
+// This is a workaround for that. Can be removed if Spring-security will handle plain-ws in future
 @Service
 public class WsSecurityHandshakeInterceptor implements HandshakeInterceptor {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(WsSecurityHandshakeInterceptor.class);
-	
+
 	//@Autowired
-	private AuthenticationManager authenticationManager;
-	
-	private JwtValidator jwtValidator;
-	
-	public WsSecurityHandshakeInterceptor(AuthenticationManager authenticationManager, JwtValidator jwtValidator) {
-		
+	private final AuthenticationManager authenticationManager;
+
+	private final JwtValidator jwtValidator;
+
+	public WsSecurityHandshakeInterceptor(final AuthenticationManager authenticationManager, final JwtValidator jwtValidator) {
+
 		this.authenticationManager = authenticationManager;
 		this.jwtValidator = jwtValidator;
 	}
 
 	@Override
-	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-			WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+	public boolean beforeHandshake(final ServerHttpRequest request, final ServerHttpResponse response,
+			final WebSocketHandler wsHandler, final Map<String, Object> attributes) throws Exception {
 
-		HttpServletRequest origRequest = ((ServletServerHttpRequest) request).getServletRequest();
-		
-		String token = origRequest.getParameter("token");
+		final HttpServletRequest origRequest = ((ServletServerHttpRequest) request).getServletRequest();
+
+		final String token = origRequest.getParameter("token");
 		try {
-			SecurityContext context = SecurityContextHolder.createEmptyContext();
-			Authentication auth = authenticationManager.authenticate(jwtValidator.validateToken(token));
+			final SecurityContext context = SecurityContextHolder.createEmptyContext();
+			final Authentication auth = authenticationManager.authenticate(jwtValidator.validateToken(token));
 			context.setAuthentication(auth);
 			SecurityContextHolder.setContext(context);
 			return true;
 		}
-		catch(AuthenticationException e) {
+		catch(final AuthenticationException e) {
 			LOG.warn("Authentication failed for token={}", token);
 			return false;
 		}
 	}
 
 	@Override
-	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
-			WebSocketHandler wsHandler, Exception exception) {
-		
+	public void afterHandshake(final ServerHttpRequest request, final ServerHttpResponse response,
+			final WebSocketHandler wsHandler, final Exception exception) {
+
 		LOG.debug("After handshake");
 	}
 
