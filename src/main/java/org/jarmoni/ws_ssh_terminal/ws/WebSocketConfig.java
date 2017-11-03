@@ -1,23 +1,25 @@
 package org.jarmoni.ws_ssh_terminal.ws;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.server.HandshakeInterceptor;
 
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-	
-	@Autowired
-	private HandshakeInterceptor interceptor;
 
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+	//	@Autowired
+	//	private HandshakeInterceptor interceptor;
 
-		registry.addHandler(new SocketHandler(), "/ws")
-				.addInterceptors(interceptor);
+	@Override
+	public void registerWebSocketHandlers(final WebSocketHandlerRegistry registry) {
+
+		// this is the 'custom-stuff' we hopefully get rid of...
+		//		registry.addHandler(new SocketHandler(), "/ws")
+		//				.addInterceptors(interceptor);
+
+		registry.addHandler(new SocketHandler(), "/ws");
 	}
 
 }

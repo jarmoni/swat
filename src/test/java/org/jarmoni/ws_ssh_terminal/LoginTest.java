@@ -69,4 +69,12 @@ public class LoginTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
 	}
 
+	@Test
+	public void testWrongHttpMethodNotFound() throws Exception {
+
+		final WebUser user = new WebUser(WebUserDetailsService.DUMMY_USER, WebUserDetailsService.DUMMY_PASSWD);
+		final ResponseEntity<Void> response = this.restTemplate.exchange("/login", HttpMethod.GET,
+				new HttpEntity<String>(this.gson.toJson(user)), Void.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+	}
 }

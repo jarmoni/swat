@@ -1,7 +1,6 @@
 package org.jarmoni.ws_ssh_terminal.security;
 
 import static org.jarmoni.ws_ssh_terminal.security.SecurityConstants.HEADER_STRING;
-import static org.jarmoni.ws_ssh_terminal.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
 
@@ -15,13 +14,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-// Validates token when it has been set as header.
-// Unfortunately not useable for websockets, because browsers do not support headers for ws up to now.
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+public class JwtWsAuthorizationFilter extends BasicAuthenticationFilter {
 
 	private final JwtValidator jwtValidator;
 
-	public JwtAuthorizationFilter(final AuthenticationManager authManager, final JwtValidator jwtValidator) {
+	public JwtWsAuthorizationFilter(final AuthenticationManager authManager, final JwtValidator jwtValidator) {
 
 		super(authManager);
 		this.jwtValidator = jwtValidator;
@@ -31,16 +28,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	protected void doFilterInternal(final HttpServletRequest req, final HttpServletResponse res, final FilterChain chain)
 			throws IOException, ServletException {
 
-		final String header = req.getHeader(HEADER_STRING);
+		final String token = req.getParameter(HEADER_STRING);
 
-		if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+		if(token == null) {
 			chain.doFilter(req, res);
-			return;
 		}
 
-		final String token = header.replace(TOKEN_PREFIX, "");
-
 		final UsernamePasswordAuthenticationToken authentication = this.jwtValidator.validateToken(token);
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		chain.doFilter(req, res);
 	}

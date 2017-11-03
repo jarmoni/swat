@@ -14,13 +14,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 // Spring-security does not support websockets without STOMP (https://github.com/spring-projects/spring-security/issues/3915)
 // This is a workaround for that. Can be removed if Spring-security will handle plain-ws in future
-@Service
+// @Service
 public class WsSecurityHandshakeInterceptor implements HandshakeInterceptor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WsSecurityHandshakeInterceptor.class);
