@@ -2,6 +2,7 @@ package org.jarmoni.ws_ssh_terminal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.jarmoni.ws_ssh_terminal.security.SecurityConstants.HEADER_STRING;
 import static org.jarmoni.ws_ssh_terminal.security.SecurityConstants.TOKEN_PREFIX;
 import static org.junit.Assert.fail;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.Endpoint;
@@ -28,8 +30,6 @@ import org.jarmoni.ws_ssh_terminal.ws.message.WsMessageWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,7 +47,7 @@ import com.google.gson.Gson;
 @RunWith(SpringRunner.class)
 public class WsTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(WsTest.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(WsTest.class);
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -75,7 +75,7 @@ public class WsTest {
 	public void testConnFailsWrongTokenGiven() throws Exception {
 
 		try {
-			this.createWsConnection(String.format("ws://localhost:%s/ws?Authorization=%s", this.port, this.staleToken));
+			this.createWsConnection(String.format("ws://localhost:%s/ws?Authorization=%s", this.port, this.staleToken), null);
 			fail("this test should fail!");
 
 		}
@@ -94,11 +94,14 @@ public class WsTest {
 		final List<String> authHeaders = response.getHeaders().get(HEADER_STRING);
 		final String token = authHeaders.get(0).replace(TOKEN_PREFIX, "");
 
-		this.createWsConnection(String.format("ws://localhost:%s/ws?Authorization=%s", this.port, token));
+		this.createWsConnection(String.format("ws://localhost:%s/ws?Authorization=%s", this.port, token), mw ->  {
+			assertThat(mw.ping, is(notNullValue()));
+			assertThat(mw.ping.getUuid(), is(this.pingWrapper.ping.getUuid()));
+		});
 	}
 
 
-	private void createWsConnection(final String url) throws Exception {
+	private void createWsConnection(final String url, final Consumer<WsMessageWrapper> applyFunc) throws Exception {
 
 		final CountDownLatch cdl = new CountDownLatch(1);
 
@@ -110,8 +113,10 @@ public class WsTest {
 			@Override
 			public void onOpen(final Session session, final EndpointConfig config) {
 				try {
-					session.addMessageHandler((Whole<String>) message -> {
+					session.addMessageHandler(String.class, (Whole<String>) message -> {
 						System.out.println(">>> Received message: " + message);
+						final WsMessageWrapper resultWrapper = gson.fromJson(message, WsMessageWrapper.class);
+						applyFunc.accept(resultWrapper);
 						cdl.countDown();
 					});
 					session.getBasicRemote().sendText(gson.toJson(pingWrapper));
@@ -121,7 +126,7 @@ public class WsTest {
 			}
 		}, cec, new URI(String.format(url, this.port)));
 
-		final boolean success = cdl.await(5, TimeUnit.SECONDS);
+		final boolean success = cdl.await(500, TimeUnit.SECONDS);
 		if(!success) {
 			fail("No result received");
 		}

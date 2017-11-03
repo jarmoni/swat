@@ -34,7 +34,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		if (wrapper.ping != null) {
 			// send ping back to origin
-			session.sendMessage(new TextMessage(this.gson.toJson(wrapper.ping)));
+			session.sendMessage(new TextMessage(this.gson.toJson(wrapper)));
 		} else if (wrapper.sshCredentials != null) {
 			// create ssh-handler for this session
 			// TODO if handler already exists

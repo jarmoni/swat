@@ -29,18 +29,7 @@ public class RootAccessTest {
 	@Test
 	public void testAccessToRootOfPathPermitted() throws Exception {
 
-		System.out.println("port=" + port);
-
 		final ResponseEntity<Void> response = this.restTemplate.exchange("/index.html", HttpMethod.GET, HttpEntity.EMPTY, Void.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-	}
-
-	@Test
-	public void testAccessToArbitraryPathDenied() throws Exception {
-
-		System.out.println("port=" + port);
-
-		final ResponseEntity<Void> response = this.restTemplate.exchange("/login", HttpMethod.GET, HttpEntity.EMPTY, Void.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 	}
 }
