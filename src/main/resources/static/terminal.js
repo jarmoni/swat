@@ -1,18 +1,10 @@
 $(document).ready(function() {
-	var host = 'localhost:8080';
-	//var wsUrl = 'ws://' + host + '/ws';
-	//var wsUrl = 'ws://user:password@' + host + '/ws';
-	var connParams = jQuery.param({
-		webUser: 'user',
-		webPasswd: 'password'
-	});
-	var wsUrl = 'ws://' + host + '/ws?' + connParams;
-//	var connectUrl = 'http://' + host + '/connect';
-//	var disconnectUrl = 'http://' + host + '/disconnect';
+	
+	var loginUrl = ($('#webTls').is(':checked') ? 'https' : 'http') + '://' + $('#webServer').val() + LOGIN_URL_POSTFIX;
+	var wsUrl = ($('#webTls').is(':checked') ? 'wss' : 'ws') + '://' + $('#webServer').val() + WS_URL_POSTFIX;
 	
 	var connected = false;
 	var ws;
-	
 
 	function sendToWs(data) {
 		if(connected) {
@@ -48,7 +40,7 @@ $(document).ready(function() {
 	});
 	window.terminal = terminal;
 	
-	function connect() {
+	function createWs() {
 		console.log("Connecting to URL=" + wsUrl);
 		ws = new WebSocket(wsUrl);
 		
@@ -57,13 +49,7 @@ $(document).ready(function() {
 			terminal.freeze(false);
 			terminal.enable();
 			connected = true;
-			var connMsg = JSON.stringify({
-				'type': 'sshCredentials',
-				'server': $('#server').val(),
-				'port': $('#port').val(),
-				'user': $('#user').val(),
-				'passwd': $('#passwd').val()
-			});
+			var connMsg = JSON.stringify(new SshCredentialsMessage($('#sshServer').val(), $('#sshUser').val(), $('#sshPasswd').val()).create());
 			console.log("Sending connMsg to Ws=" + connMsg);
 			sendToWs(connMsg);
 		};
@@ -80,6 +66,15 @@ $(document).ready(function() {
 		};
 	}
 	
+	function connect() {
+		console.log("Requesting token from URL=" + loginUrl);
+		doHttpPost(loginUrl, new WebUser($('#webUser').val(), $('#webPasswd').val()), function(data, status, jqXHR) {
+			var token = jqXHR.getResponseHeader('Authorization').replace(TOKEN_PREFIX, "");
+			console.log("Received token=" + token)
+		})
+		
+	}
+	
 	$('#disconnect').click(function() {
 		console.log("Disonnecting...");
 		if(connected) {
@@ -90,19 +85,6 @@ $(document).ready(function() {
 	$('#conn-form').submit(function( event ) {
 		console.log("Connecting...");
 		event.preventDefault();
-//		var reqBody = {};
-//		reqBody['user'] = $('#user').val();
-//		reqBody['passwd'] = $('#passwd').val();
-//		reqBody['server'] = $('#server').val();
-//		reqBody['port'] = $('#port').val();
-//		console.log(JSON.stringify(reqBody));
-//		//var $inputs = $('#conn-form :input');
-//		doHttpPost(connectUrl, reqBody, function(response) {
-//			connect();
-//			console.log("Connected...");
-//		});
 		connect();
 	});
-
-	
 });

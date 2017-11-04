@@ -69,7 +69,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private void initSsh(final WebSocketSession session, final SshCredentialsMessage sshCredentials) {
 
 		try {
-			this.handlers.put(session, new SshHandler(session, sshCredentials.getSshServer(),
+			this.handlers.put(session, new SshHandler(session, sshCredentials.getSshHost(),
 					sshCredentials.getSshPort(), sshCredentials.getSshUser(), sshCredentials.getSshPasswd()));
 			LOG.info("Added new SshHandler for session-id={}", session != null ? session.getId() : null);
 		} catch (final Exception e) {
