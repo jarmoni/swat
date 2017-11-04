@@ -1,20 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>WST</title>
-<script src="/jquery-3.2.1.js"></script>
-<script src="/jquery.terminal-1.9.0.js"></script>
-<script src="/constants.js"></script>
-<script src="/model.js"></script>
-<script src="/terminal.js"></script>
-<link rel="stylesheet" type="text/css" href="/bootstrap.min-4.0.0-beta2.css" />
-<link rel="stylesheet" type="text/css" href="/jquery.terminal-1.9.0.css" />
-<link rel="stylesheet" type="text/css" href="/terminal.css" />
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>S.W.A.T.</title>
+	<script src="/jquery-3.2.1.js"></script>
+<!-- 	<script src="/popper-1.12.6.js"></script> -->
+	<script src="/bootstrap-bundle-4.0.0-beta2.js"></script>
+	<script src="/jquery.terminal-1.9.0.js"></script>
+	<script src="/constants.js"></script>
+	<script src="/model.js"></script>
+	<script src="/terminal.js"></script>
+	<link rel="stylesheet" type="text/css" href="/bootstrap-4.0.0-beta2.css" />
+	<link rel="stylesheet" type="text/css" href="/jquery.terminal-1.9.0.css" />
+	<link rel="stylesheet" type="text/css" href="/terminal.css" />
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<script type="text/javascript">
+		(function($) {
+			$(document).ready( function() { 
+				var heightMenu = $('#menu').height();
+				var heightLog = $('#log').height();
+				$('#terminal').css('height', $(window).height() - (heightMenu + heightLog));
+			});
+		})(jQuery);
+	</script>
 </head>
 <body>
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<h6>Web-Server</h6>
+						<div class="form-group">
+							<label for="webServer" class="form-control-label">Server</label>
+							<input type="text" class="form-control" id="webServer" value="localhost:8080">
+						</div>
+						<div class="form-group">
+							<label for="webUser" class="form-control-label">User</label>
+							<input type="text" class="form-control" id="webUser" value="user">
+						</div>
+						<div class="form-group">
+							<label for="webPasswd" class="form-control-label">Password</label>
+							<input type="password" class="form-control" id="webPasswd" value="password">
+						</div>
+						<div class="checkbox"><label>Use TLS&nbsp;&nbsp;&nbsp;<input type="checkbox" id="webTls" disabled></label></div>
+						<hr>
+						<h6>SSH-Server</h6>
+						<div class="form-group">
+							<label for="sshServer" class="form-control-label">Server</label>
+							<input type="text" class="form-control" id="sshServer" value="localhost:22">
+						</div>
+						<div class="form-group">
+							<label for="sshUser" class="form-control-label">User</label>
+							<input type="text" class="form-control" id="sshUser" value="user">
+						</div>
+						<div class="form-group">
+							<label for="sshPasswd" class="form-control-label">Password</label>
+							<input type="password" class="form-control" id="sshPasswd" value="password">
+						</div>
+						<div class="form-group">
+							<label for="sshPK" class="form-control-label">Private-Key</label>
+							<input type="file" class='form-control' id="sshPK"/>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-success">OK</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="body">
+		<div id="menu">
 		<div class="row" style="background-color: #f7f8f9;">
 			<div class="col-sm-3">
 				<div class="terminal-image">
@@ -22,9 +86,9 @@
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<h1 class="text-center">WST</h1>
-				<h4 class="text-center">Web-SSH-Terminal</h4>
-				<h6 class="text-center">by Michael Sorg</h6>
+				<h1 class="text-center">S.W.A.T.</h1>
+				<h4 class="text-center">SSH-Web-Application-Terminal</h4>
+				<h6 class="text-center">by <a href="mailto:michas@jarmoni.org">michas</a></h6>
 			</div>
 			<div class="col-sm-3">
 				<div class="terminal-image2">
@@ -32,15 +96,22 @@
 				</div>
 			</div>
 		</div>
-		<hr>
+		<hr class="style1">
 		<nav class="navbar navbar-light bg-faded" style="background-color: #edf2f7;">
 			<form class="form-inline">
 				<button class="btn btn-outline-success" type="button">Connect</button>
 			<button class="btn btn-outline-danger" type="button" disabled>Disonnect</button>
-			<button class="btn btn-outline-secondary" type="button">Settings</button>
+			<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#exampleModal">Settings</button>
 		</form>
 		</nav>
+		</div>
 		<div id="terminal"></div>
+		<div id="log" class="panel-default">
+				<div class="label label-secondary label-outlined">Messages</div>
+			<div class="form-group">
+  				<textarea class="form-control" rows="5" id="messages" style="font-family:monospace;" readonly></textarea>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
