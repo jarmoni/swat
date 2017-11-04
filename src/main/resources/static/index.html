@@ -47,7 +47,7 @@
 						</div>
 						<div class="form-group">
 							<label for="webPasswd" class="form-control-label">Password</label>
-							<input type="password" class="form-control" id="webPasswd" value="password">
+							<input type="password" class="form-control" id="webPasswd" value="passwd">
 						</div>
 						<div class="checkbox"><label>Use TLS&nbsp;&nbsp;&nbsp;<input type="checkbox" id="webTls" disabled></label></div>
 						<hr>
@@ -58,11 +58,11 @@
 						</div>
 						<div class="form-group">
 							<label for="sshUser" class="form-control-label">User</label>
-							<input type="text" class="form-control" id="sshUser" value="user">
+							<input type="text" class="form-control" id="sshUser" value="micha">
 						</div>
 						<div class="form-group">
 							<label for="sshPasswd" class="form-control-label">Password</label>
-							<input type="password" class="form-control" id="sshPasswd" value="password">
+							<input type="password" class="form-control" id="sshPasswd" value="XXX">
 						</div>
 						<div class="form-group">
 							<label for="sshPK" class="form-control-label">Private-Key</label>
@@ -99,8 +99,8 @@
 		<hr class="style1">
 		<nav class="navbar navbar-light bg-faded" style="background-color: #edf2f7;">
 			<form class="form-inline">
-				<button class="btn btn-outline-success" type="button">Connect</button>
-			<button class="btn btn-outline-danger" type="button" disabled>Disonnect</button>
+				<button class="btn btn-outline-success" id="btnConnect" type="button">Connect</button>
+			<button class="btn btn-outline-danger" id="btnConnect" type="button" disabled>Disonnect</button>
 			<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#exampleModal">Settings</button>
 		</form>
 		</nav>

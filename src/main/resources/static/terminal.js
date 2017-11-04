@@ -16,7 +16,7 @@ $(document).ready(function() {
 	}
 	
 	function printToMessageArea(msg) {
-		$('#messages').append(msg);
+		$('#messages').append(msg + "\n");
 	}
 	
 	function doHttpPost(url, data, successFun) {
@@ -27,26 +27,24 @@ $(document).ready(function() {
 			data: JSON.stringify(data),
 			success: successFun,
 			error: function() {
-				printToMessageArea('REST-call to=' + url + ' with data=' + data + ' failed');
+				printToMessageArea('REST-call to: ' + url + ' with data: ' + JSON.stringify(data) + ' failed');
 			}
 		});
 	}
 
 	var terminal = $('#terminal').terminal(function(command, terminal) {
-		sendToWs(JSON.stringify({
-			'type': 'command',
-			'command': command
-		}));
+		sendToWs(JSON.stringify(new CommandMessage(command).create()));
 	}, {
-		greetings : "Welcome to S.W.A.T.!\nTo start a new SSH-session you have to...\n- Enter adress and credentials ('Settings').\n- Press 'Connect' for launching the Session.\n- Press 'Disonnect' to terminate the session and free all resources.",
+		greetings : WELCOME_MSG,
 		prompt : '$ ',
 		exit : false
 	});
 	window.terminal = terminal;
 	
-	function createWs() {
-		printToMessageArea("Connecting to URL=" + wsUrl);
-		ws = new WebSocket(wsUrl);
+	function createWs(token) {
+		var fullWsUrl = wsUrl + token;
+		printToMessageArea("Connecting to URL=" + fullWsUrl);
+		ws = new WebSocket(fullWsUrl);
 		
 		ws.onopen = function() {
 			printToMessageArea('Socket open');
@@ -54,7 +52,7 @@ $(document).ready(function() {
 			terminal.enable();
 			connected = true;
 			var connMsg = JSON.stringify(new SshCredentialsMessage($('#sshServer').val(), $('#sshUser').val(), $('#sshPasswd').val()).create());
-			printToMessageArea("Sending connMsg to Ws=" + connMsg);
+			printToMessageArea("Sending connMsg to WS-server: " + connMsg);
 			sendToWs(connMsg);
 		};
 		ws.onclose = function() {
@@ -65,30 +63,30 @@ $(document).ready(function() {
 			terminal.freeze(true);
 		};
 		ws.onmessage = function(msg) {
-			printToMessageArea("msg=" + msg);
+			console.log("msg=" + msg.data);
 			terminal.echo(msg.data);
 		};
 	}
 	
 	function connect() {
-		printToMessageArea("Requesting token from URL=" + loginUrl);
+		printToMessageArea("Requesting token from URL: " + loginUrl);
 		doHttpPost(loginUrl, new WebUser($('#webUser').val(), $('#webPasswd').val()), function(data, status, jqXHR) {
 			var token = jqXHR.getResponseHeader('Authorization').replace(TOKEN_PREFIX, "");
-			printToMessageArea("Received token=" + token)
+			printToMessageArea("Received JWT-token: " + token)
+			createWs(token);
 		})
 		
 	}
 	
-	$('#disconnect').click(function() {
+	$('#btnDisconnect').click(function() {
 		printToMessageArea("Disonnecting...");
 		if(connected) {
 			ws.close();
 		}
 	});
 	
-	$('#conn-form').submit(function( event ) {
+	$('#btnConnect').click(function() {
 		printToMessageArea("Connecting...");
-		event.preventDefault();
 		connect();
 	});
 });

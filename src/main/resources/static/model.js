@@ -22,7 +22,7 @@ class CommandMessage {
 class SshCredentialsMessage {
 	constructor(sshServer, sshUser, sshPasswd) {
 		this.sshHost = sshServer.split(':')[0];
-		this.sshPort = sshPort.split(':')[1];
+		this.sshPort = sshServer.split(':')[1];
 		this.sshUser = sshUser;
 		this.sshPasswd = sshPasswd;
 	}
