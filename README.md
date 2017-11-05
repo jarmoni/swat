@@ -45,8 +45,31 @@ mvn spring-boot:run
 
 ## Issues and limitations
 
+As this project is in prototype-state, some functionality is not fully implemented respectively is not available (yet).
 
+### User-management
 
+The *user-database* consists of static map which contains exactly 1 user (*user:passwd*). But since this is encapsulated in an interface, it would be no big thing, to replace this dummy with e.g. an LDAP- or SQL-based implementation. Due to the static nature of the current implementation it is also not possible to add/remove users.
 
+### Security
+
+Event though there is no 'real' user-management, authentication is fully implemented backend-side. Unfortunately the browser-built-in websocket-client does not support headers for websocket-connections, it was necessary to handle WS(S) and 'regular' HTTP(S)-connections in a different way.
+
+TLS is working, but cannot be (easily) used in the test-setup. This is since browsers refuse to open Websocket-connections without trusted certificates (while HTTPS-connections with self-signed-certs only result in a warning).
+
+### Shell Forwarding
+
+One lesson learned during implementation of the SSH-stuff: Shells behave really, really different! The shell-output has to be post-processed to prevent undesired results. This post-processing is only rudimentarily implemented yet. With a regular Ubuntu-box it works not too bad (Bash and ZSH), but there is lot more to do (not to mention other distribution/shell-combinations).
+
+### Frontend
+
+As I am not the 'UI-guy' I tried to keep it as simple as possible. Here are some of the (innumerable) things that should be improved:
+
+- Login-screen
+- Input-validation
+- Proper state-transitions (enable/disable components,....)
+- UI-design in general
+
+Any contribution is appreciated ;-)
 
 
