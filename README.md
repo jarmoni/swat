@@ -1,8 +1,6 @@
 # S.W.A.T
 SSH-Web-Application-Terminal
 
-**Note:** This is just a proof of concept
-
 ## Goals
 
 Proof of concept:
