@@ -55,9 +55,13 @@ Event though there is no 'real' user-management, authentication is fully impleme
 
 TLS is working, but cannot be (easily) used in the test-setup. This is since browsers refuse to open Websocket-connections without trusted certificates (while HTTPS-connections with self-signed-certs only result in a warning).
 
+### SSH
+
+At the moment only Username/Password-login is fully implemented, but PK-based login will be available soon.
+
 ### Shell Forwarding
 
-One lesson learned during implementation of the SSH-stuff: Shells behave really, really different! The shell-output has to be post-processed to prevent undesired results. This post-processing is only rudimentarily implemented yet. With a regular Ubuntu-box it works not too bad (Bash and ZSH), but there is lot more to do (not to mention other distribution/shell-combinations).
+One lesson learned during implementation of the streaming-stuff: Shells behave really, really different! The shell-output has to be post-processed to prevent undesired results. This post-processing is only rudimentarily implemented yet. With a regular Ubuntu-box it works not too bad (Bash and ZSH), but there is lot more to do (not to mention other distribution/shell-combinations).
 
 ### Frontend
 
