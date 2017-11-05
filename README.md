@@ -29,7 +29,7 @@ ssh -i <PROJECT_ROOT_DIR>docker/ssh/id_rsa_4test -p 2222 root@localhost
 ```
 ### Run the S.W.A.T. backend
 
-The easiest way to start the application for testing is the *Spring-Boot-Maven-Plugin* (ensure you have [Maven](https://maven.apache.org) installed.
+The easiest way to start the application for testing is by use of *Spring-Boot-Maven-Plugin* (ensure you have [Maven](https://maven.apache.org) installed).
 
 ```
 cd <PROJECT_ROOT_DIR>
@@ -47,11 +47,11 @@ As this project is in prototype-state, some functionality is not fully implement
 
 ### User-management
 
-The *user-database* consists of static map which contains exactly 1 user (*user:passwd*). But since this is encapsulated in an interface, it would be no big thing, to replace this dummy with e.g. an LDAP- or SQL-based implementation. Due to the static nature of the current implementation it is also not possible to add/remove users.
+The *user-database* consists of a static map which contains exactly 1 user (*user:passwd*). But since this is encapsulated in an interface, it would be no big thing, to replace this dummy with e.g. an LDAP- or SQL-based implementation. Due to the static nature of the current implementation it is also not possible to add/remove users.
 
 ### Security
 
-Event though there is no 'real' user-management, authentication is fully implemented backend-side. Unfortunately the browser-built-in websocket-client does not support headers for websocket-connections, it was necessary to handle WS(S) and 'regular' HTTP(S)-connections in a different way.
+Event though there is no 'real' user-management, authentication is fully implemented at backend side. Unfortunately the browser-built-in websocket-client does not support headers for websocket-connections, it was necessary to handle authentification for WS(S) and 'regular' HTTP(S)-connections in a different way.
 
 TLS is working, but cannot be (easily) used in the test-setup. This is since browsers refuse to open Websocket-connections without trusted certificates (while HTTPS-connections with self-signed-certs only result in a warning).
 
