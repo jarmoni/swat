@@ -1,10 +1,31 @@
 $(document).ready(function() {
 	
 	var loginUrl = ($('#webTls').is(':checked') ? 'https' : 'http') + '://' + $('#webServer').val() + LOGIN_URL_POSTFIX;
-	var wsUrl = ($('#webTls').is(':checked') ? 'wss' : 'ws') + '://' + $('#webServer').val() + WS_URL_POSTFIX;
+	var WsUrlTemplate = ($('#webTls').is(':checked') ? 'wss' : 'ws') + '://' + $('#webServer').val() + WS_URL_POSTFIX;
 	
 	var connected = false;
 	var ws;
+	
+	function setConnected() {
+		printToMessageArea('Socket open');
+		terminal.freeze(false);
+		terminal.enable();
+		connected = true;
+		$('#btnDisconnect').removeClass('disabled');
+		$('#btnConnect').addClass('disabled');
+//		$('#btnDisconnect').disabled = false;
+//		$('#btnConnect').disabled = true;
+	}
+	
+	function setDisconnected() {
+		printToMessageArea('Socket closed');
+		connected = false;
+		terminal.echo("\n\nWebsocket-connection closed.");
+		terminal.disable();
+		terminal.freeze(true);
+		$('#btnDisconnect').addClass('disabled');
+		$('#btnConnect').removeClass('disabled');
+	}
 
 	function sendToWs(data) {
 		if(connected) {
@@ -42,25 +63,18 @@ $(document).ready(function() {
 	window.terminal = terminal;
 	
 	function createWs(token) {
-		var fullWsUrl = wsUrl + token;
-		printToMessageArea("Connecting to URL=" + fullWsUrl);
+		var fullWsUrl = WsUrlTemplate + token;
+		printToMessageArea("Connecting to URL: " + fullWsUrl);
 		ws = new WebSocket(fullWsUrl);
 		
 		ws.onopen = function() {
-			printToMessageArea('Socket open');
-			terminal.freeze(false);
-			terminal.enable();
-			connected = true;
+			setConnected();
 			var connMsg = JSON.stringify(new SshCredentialsMessage($('#sshServer').val(), $('#sshUser').val(), $('#sshPasswd').val()).create());
 			printToMessageArea("Sending connMsg to WS-server: " + connMsg);
 			sendToWs(connMsg);
 		};
 		ws.onclose = function() {
-			printToMessageArea('Socket closed');
-			connected = false;
-			terminal.echo("\n\nWebsocket-connection closed.");
-			terminal.disable();
-			terminal.freeze(true);
+			setDisconnected();
 		};
 		ws.onmessage = function(msg) {
 			console.log("msg=" + msg.data);
@@ -79,13 +93,19 @@ $(document).ready(function() {
 	}
 	
 	$('#btnDisconnect').click(function() {
-		printToMessageArea("Disonnecting...");
-		if(connected) {
-			ws.close();
+		if(!connected) {
+			console.log("No connection present. Nothing to disconnect");
+			return
 		}
+		printToMessageArea("Disonnecting...");
+		ws.close();
 	});
 	
 	$('#btnConnect').click(function() {
+		if(connected) {
+			console.log("Already connected");
+			return;
+		}
 		printToMessageArea("Connecting...");
 		connect();
 	});
