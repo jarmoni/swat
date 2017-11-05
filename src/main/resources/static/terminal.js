@@ -1,7 +1,10 @@
 $(document).ready(function() {
 	
-	var loginUrl = ($('#webTls').is(':checked') ? 'https' : 'http') + '://' + $('#webServer').val() + LOGIN_URL_POSTFIX;
-	var WsUrlTemplate = ($('#webTls').is(':checked') ? 'wss' : 'ws') + '://' + $('#webServer').val() + WS_URL_POSTFIX;
+	var protocol = document.location.protocol;
+	var baseUrl = document.location.href;
+	
+	var loginUrl = baseUrl + LOGIN_URL_POSTFIX;
+	var wsUrlTemplate = ('https:' == protocol ? 'wss:' : 'ws:') + baseUrl.replace(protocol, '') + WS_URL_POSTFIX;
 	
 	var connected = false;
 	var ws;
@@ -63,7 +66,7 @@ $(document).ready(function() {
 	window.terminal = terminal;
 	
 	function createWs(token) {
-		var fullWsUrl = WsUrlTemplate + token;
+		var fullWsUrl = wsUrlTemplate + token;
 		printToMessageArea("Connecting to URL: " + fullWsUrl);
 		ws = new WebSocket(fullWsUrl);
 		

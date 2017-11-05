@@ -1,7 +1,7 @@
 const TOKEN_PREFIX = "Bearer ";
 const HEADER_STRING = "Authorization";
-const LOGIN_URL_POSTFIX = '/login';
-const WS_URL_POSTFIX = '/ws?' + HEADER_STRING + '=';
+const LOGIN_URL_POSTFIX = 'login';
+const WS_URL_POSTFIX = 'ws?' + HEADER_STRING + '=';
 const WELCOME_MSG = "Welcome to S.W.A.T.!\n" +
 		"To start a new SSH-session you'll have to...\n" +
 		"- Enter adress and credentials ('Settings').\n" +
