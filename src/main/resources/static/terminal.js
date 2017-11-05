@@ -16,8 +16,6 @@ $(document).ready(function() {
 		connected = true;
 		$('#btnDisconnect').removeClass('disabled');
 		$('#btnConnect').addClass('disabled');
-//		$('#btnDisconnect').disabled = false;
-//		$('#btnConnect').disabled = true;
 	}
 	
 	function setDisconnected() {

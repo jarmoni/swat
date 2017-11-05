@@ -26,11 +26,11 @@
 	</script>
 </head>
 <body>
-	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="modSettings" tabindex="-1" role="dialog" aria-labelledby="modSettingsLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+					<h5 class="modal-title" id="modSettingsLabel">Settings</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -39,10 +39,6 @@
 					<form>
 						<h6>Web-Server</h6>
 						<div class="form-group">
-							<label for="webServer" class="form-control-label">Server</label>
-							<input type="text" class="form-control" id="webServer" value="localhost:8080">
-						</div>
-						<div class="form-group">
 							<label for="webUser" class="form-control-label">User</label>
 							<input type="text" class="form-control" id="webUser" value="user">
 						</div>
@@ -50,7 +46,6 @@
 							<label for="webPasswd" class="form-control-label">Password</label>
 							<input type="password" class="form-control" id="webPasswd" value="passwd">
 						</div>
-						<div class="checkbox"><label>Use TLS&nbsp;&nbsp;&nbsp;<input type="checkbox" id="webTls" disabled></label></div>
 						<hr>
 						<h6>SSH-Server</h6>
 						<div class="form-group">
@@ -102,7 +97,7 @@
 				<form class="form-inline">
 					<button class="btn btn-outline-success" id="btnConnect" type="button">Connect</button>
 					<button class="btn btn-outline-danger disabled" id="btnDisconnect" type="button">Disonnect</button>
-					<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#exampleModal">Settings</button>
+					<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#modSettings">Settings</button>
 				</form>
 			</nav>
 		</div>
