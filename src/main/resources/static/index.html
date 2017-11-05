@@ -19,7 +19,8 @@
 			$(document).ready( function() { 
 				var heightMenu = $('#menu').height();
 				var heightLog = $('#log').height();
-				$('#terminal').css('height', $(window).height() - (heightMenu + heightLog));
+				var heightHr = $('#hr1').height();
+				$('#terminal').css('height', $(window).height() - (heightMenu + heightLog + heightHr));
 			});
 		})(jQuery);
 	</script>
@@ -30,7 +31,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Settings</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -54,15 +55,15 @@
 						<h6>SSH-Server</h6>
 						<div class="form-group">
 							<label for="sshServer" class="form-control-label">Server</label>
-							<input type="text" class="form-control" id="sshServer" value="localhost:22">
+							<input type="text" class="form-control" id="sshServer" value="localhost:2222">
 						</div>
 						<div class="form-group">
 							<label for="sshUser" class="form-control-label">User</label>
-							<input type="text" class="form-control" id="sshUser" value="micha">
+							<input type="text" class="form-control" id="sshUser" value="root">
 						</div>
 						<div class="form-group">
 							<label for="sshPasswd" class="form-control-label">Password</label>
-							<input type="password" class="form-control" id="sshPasswd" value="XXX">
+							<input type="password" class="form-control" id="sshPasswd" value="root">
 						</div>
 						<div class="form-group">
 							<label for="sshPK" class="form-control-label">Private-Key</label>
@@ -71,7 +72,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 					<button type="button" class="btn btn-success">OK</button>
 				</div>
 			</div>
@@ -79,38 +80,38 @@
 	</div>
 	<div id="body">
 		<div id="menu">
-		<div class="row" style="background-color: #f7f8f9;">
-			<div class="col-sm-3">
-				<div class="terminal-image">
-					<img src="/tango-computer-green-72-180746.png">
+			<div id="rowMenu" class="row" style="background-color: #f7f8f9;">
+				<div class="col-sm-3">
+					<div class="terminal-image">
+						<img src="/tango-computer-green-72-180746.png">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<h1 class="text-center">S.W.A.T.</h1>
+					<h4 class="text-center">SSH-Web-Application-Terminal</h4>
+					<h6 class="text-center">by <a href="mailto:michas@jarmoni.org">michas</a></h6>
+				</div>
+				<div class="col-sm-3">
+					<div class="terminal-image2">
+						<img src="/tango-computer-off-72-180747.png">
+					</div>
 				</div>
 			</div>
-			<div class="col-sm-6">
-				<h1 class="text-center">S.W.A.T.</h1>
-				<h4 class="text-center">SSH-Web-Application-Terminal</h4>
-				<h6 class="text-center">by <a href="mailto:michas@jarmoni.org">michas</a></h6>
-			</div>
-			<div class="col-sm-3">
-				<div class="terminal-image2">
-					<img src="/tango-computer-off-72-180747.png">
-				</div>
-			</div>
-		</div>
-		<hr class="style1">
-		<nav class="navbar navbar-light bg-faded" style="background-color: #edf2f7;">
-			<form class="form-inline">
-				<button class="btn btn-outline-success" id="btnConnect" type="button">Connect</button>
-			<button class="btn btn-outline-danger" id="btnConnect" type="button" disabled>Disonnect</button>
-			<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#exampleModal">Settings</button>
-		</form>
-		</nav>
+			<hr id="hr1" class="style1"/>
+			<nav class="navbar navbar-light bg-faded" style="background-color: #edf2f7;">
+				<form class="form-inline">
+					<button class="btn btn-outline-success" id="btnConnect" type="button">Connect</button>
+					<button class="btn btn-outline-danger disabled" id="btnDisconnect" type="button">Disonnect</button>
+					<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#exampleModal">Settings</button>
+				</form>
+			</nav>
 		</div>
 		<div id="terminal"></div>
 		<div id="log" class="panel-default">
 				<div class="label label-secondary label-outlined">Messages</div>
 			<div class="form-group">
-  				<textarea class="form-control" rows="5" id="messages" style="font-family:monospace;" readonly></textarea>
-			</div>
+					<textarea class="form-control" id="messages" style="font-family:monospace;" readonly></textarea>
+				</div>
 		</div>
 	</div>
 </body>

@@ -2,23 +2,23 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 }
 
 #header-bar {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%;
+/* 	width: 100%; */
 	overflow: hidden;
-	//font-family: monospace;
+/* 	font-family: monospace; */
 }
 
 #terminal {
 	top: 0;
 	left: 0;
-	width: 100%;
+	width: 100vw;
 /* 	height: auto; */
 /*  	max-height: 80%;  */
 	overflow: auto;
@@ -29,7 +29,7 @@
 	left:5%;
 	top: 50%;
 	transform: translateY(-50%);
-	//border: 1px dashed deeppink;
+/* 	border: 1px dashed deeppink; */
 }
 
 .terminal-image2 {
@@ -44,6 +44,15 @@ hr.style1 {
 	height:2px;
 	padding:0px;
 	margin:0px;
+}
+
+textarea {
+	height: 10vh;
+}
+
+#rowMenu {
+	margin-left: 0px;
+	margin-right: 0px;
 }
 
 .btn {
